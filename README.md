@@ -1,4 +1,12 @@
-## Job Stages ##
+## Setup ##
+
+``LOG_LOCATION`` is where you want the output logs to go.
+``SCRIPT_LOCATION`` Is the path containing the MATLAB scripts needed to run.
+
+```
+LOG_LOCATION="/nesi/nobackup/aut02787/"
+SCRIPT_LOCATION="/nesi/project/aut02787/scripts/"
+```
 
 Job stages defined at top of ``new_stock.sh`` under ``stage_definition()``
 Arument is name of the script in ``/scripts`` to use.
