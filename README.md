@@ -1,3 +1,7 @@
+## Get Repo ##
+
+git clone https://github.com/CallumWalley/chris_z_workflow.git
+
 ## Setup ##
 
 ``LOG_LOCATION`` is where you want the output logs to go.
