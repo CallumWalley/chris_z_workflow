@@ -1,6 +1,8 @@
 ## Get Repo ##
 
+```
 git clone https://github.com/CallumWalley/chris_z_workflow.git
+```
 
 ## Setup ##
 
