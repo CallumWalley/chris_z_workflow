@@ -4,8 +4,8 @@
 # Paths
 #=======================#
 
-LOG_LOCATION="/nesi/nobackup/nesi99999/chris_z"
-SCRIPT_LOCATION="/nesi/project/nesi99999/Callum/chris_z/new_workflow/scripts"
+LOG_LOCATION="/nesi/nobackup/aut02787/"
+SCRIPT_LOCATION="/nesi/project/aut02787/scripts"
 
 #=======================#
 # Workflow Stages
@@ -104,7 +104,7 @@ done
 printf "All files present! Merging...\n"
 
 module load MATLAB
-matlab -nojvm -r "addpath('${SCRIPT_LOCATION}');merge('$PWD/${STOCKNAME}/${1}/mat_files', '${STOCKPATH}')" # 1> /dev/null 2>&1
+matlab -nojvm -r "addpath('${SCRIPT_LOCATION}');merge('$PWD/${STOCKNAME}/${1}/mat_files', '${STOCKPATH}')" 1> /dev/null 2>&1
 printf "Merged .mat file created at ${STOCKPATH}"
 
 collectEOF
