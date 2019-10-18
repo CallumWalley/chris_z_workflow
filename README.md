@@ -5,7 +5,7 @@
 
 ```
 LOG_LOCATION="/nesi/nobackup/aut02787/"
-SCRIPT_LOCATION="/nesi/project/aut02787/scripts/"
+SCRIPT_LOCATION="/nesi/project/aut02787/scripts/chris_z_workflow"
 ```
 
 Job stages defined at top of ``new_stock.sh`` under ``stage_definition()``
