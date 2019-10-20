@@ -81,10 +81,22 @@ Is  "/nesi/project/nesi99999/Callum/chris_z/new_workflow/ACR.mat" your input? (y
 
 5. File tree for ``ACR`` as shown above will be generated.
 
-6. Run first stage ``bash ACR/AutomateRun/AutomateRun_submit.sh``
+6. Edit header of ``bash ACR/AutomateRun/AutomateRun_submit.sh`` if neccisary (most importantly ``time`` and ``mem``),
+if doing test run, set ``rows``to some smaller number. On running again rows which have already been proccesssed will be skipped.
 
-7. When finished run script to validate and merge. ``ACR/AutomateRun/AutomateRun_collect.sh`` This will create a single .mat file ``ACR/AutomateRun/ACR.mat``.
+```
+stock_suffix="AutomateRun"
+stock_name="ACR"                                 
+time="04:00:00"
+mem="5000"
+rows="615" # out of 615
+mail_user="none"
+```
 
-8. Run next stage ``bash ACR/ReConstructLOBAsk/ReConstructLOBAsk_submit.sh``
+7. Run first stage ``bash ACR/AutomateRun/AutomateRun_submit.sh``
 
-9. Repeat.
+8. When finished run script to validate and merge. ``ACR/AutomateRun/AutomateRun_collect.sh`` This will create a single .mat file ``ACR/AutomateRun/ACR.mat``.
+
+9. Run next stage ``bash ACR/ReConstructLOBAsk/ReConstructLOBAsk_submit.sh``
+
+10. Repeat.
