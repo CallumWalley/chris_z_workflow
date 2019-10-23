@@ -4,8 +4,8 @@
 # Paths
 #=======================#
 
-LOG_LOCATION="/nesi/nobackup/aut02787/"
-SCRIPT_LOCATION="/nesi/project/aut02787/scripts"
+LOG_LOCATION="/nesi/nobackup/nesi99999/"
+SCRIPT_LOCATION="/nesi/project/nesi99999/Callum/chris_z/new_workflow/chris_z_workflow/scripts"
 
 #=======================#
 # Workflow Stages
@@ -42,14 +42,14 @@ stock_name="${STOCKNAME}"
 time="04:00:00"
 mem="5000"
 rows="${INPUT_ROWS}" # out of ${INPUT_ROWS}
-
 mail_user="none"
+profiling="false"
 
 # Set Paths
 #===========================================================#
 root_dir="/nesi/nobackup/aut02787/"     
 main_input_mat="${STOCKPATH}"     
-root_log_dir="${LOG_LOCATION}/${STOCKNAME}/"
+root_log_dir="${LOG_LOCATION}${STOCKNAME}/"
 
 # Validate
 #============================================================#
@@ -60,7 +60,6 @@ fi
 mkdir -pv \$root_log_dir ${root_output_dir}
 
 count=0
-
 for (( i=1; i<=\${rows}; i++ )); do
     if ls ${root_output_dir}*-\${i}.mat 1> /dev/null 2>&1; then
         printf "Row \${i} output already exists, skipping...\r"
@@ -71,7 +70,12 @@ for (( i=1; i<=\${rows}; i++ )); do
     fi
 done
 printf "Job Array containing \${count} jobs being submitted.           \n"
-
+if [ "\${profiling}" == "true" ]; then
+    EXTRA_SLURM="--profile ALL"
+    EXTRA_MAT_PRE="profile('on');"
+    EXTRA_MAT_POST="profdat=profile('info');save('\${root_log_dir}/profile_\${stock_name}_${1}-\\\${SLURM_ARRAY_TASK_ID}.mat', 'profdat');"
+    EXTRA_WRAP_POST="sh5util -j \\\${SLURM_JOB_ID} -o \${root_log_dir}/profile_\${stock_name}_${1}-\\\${SLURM_ARRAY_TASK_ID}.h5"
+fi
 # Submit
 #============================================================#
 sbatch -t \${time} \
@@ -81,8 +85,9 @@ sbatch -t \${time} \
 --mem \${mem} \
 --mail-type TIME_LIMIT_80,ARRAY_TASKS \
 --mail-user \${mail_user} \
+\${EXTRA_SLURM} \
 --wrap "module load MATLAB/2018b;\
-matlab -nojvm -r \\"addpath('${SCRIPT_LOCATION}');output_mat_\\\${SLURM_ARRAY_TASK_ID}=${1}('\${main_input_mat}',\\\${SLURM_ARRAY_TASK_ID});save('${root_output_dir}/\${stock_name}_${1}-\\\${SLURM_ARRAY_TASK_ID}.mat', 'output_mat_\\\${SLURM_ARRAY_TASK_ID}', '-v7.3');exit;\""
+matlab -nojvm -r \\"\${EXTRA_MAT_PRE}addpath('${SCRIPT_LOCATION}');output_mat_\\\${SLURM_ARRAY_TASK_ID}=${1}('\${main_input_mat}',\\\${SLURM_ARRAY_TASK_ID});save('${root_output_dir}/\${stock_name}_${1}-\\\${SLURM_ARRAY_TASK_ID}.mat', 'output_mat_\\\${SLURM_ARRAY_TASK_ID}', '-v7.3');\${EXTRA_MAT_POST}exit;\";\${EXTRA_WRAP_POST}"
 submitEOF
 printf  "File '$submit_script' created.\n"
 
@@ -94,6 +99,12 @@ cat <<collectEOF > ${collect_script}
 
 printf "Validating .mat files in '${root_output_dir}'...\n"
 
+
+if test -f "${STOCKPATH}"; then
+    printf "${STOCKPATH} already exists! Delete it to continue.\n"
+    exit 1
+fi
+
 for (( i=1; i<=${INPUT_ROWS}; i++ )); do
     if ! \$( ls ${root_output_dir}*-\${i}.mat 1> /dev/null 2>&1 ); then
         printf "'...-\${i}.mat' does not exist! Aborting merge.\n"
@@ -101,11 +112,11 @@ for (( i=1; i<=${INPUT_ROWS}; i++ )); do
         exit 1
     fi
 done
-printf "All files present! Merging...\n"
+printf "All ${INPUT_ROWS} files present! Merging as background proccess (you will get a message when it finishes).\n"
 
-module load MATLAB
-matlab -nojvm -r "addpath('${SCRIPT_LOCATION}');merge('$PWD/${STOCKNAME}/${1}/mat_files', '${STOCKPATH}')" 1> /dev/null 2>&1
-printf "Merged .mat file created at ${STOCKPATH}"
+module load MATLAB/2019b; \\
+matlab -nojvm -nosplash -r "addpath('${SCRIPT_LOCATION}');merge('$PWD/${STOCKNAME}/${1}/mat_files', '${STOCKPATH}');exit;" && printf "Merged .mat file created at ${STOCKPATH}\n" || printf "Merge at ${STOCKPATH} Failed!!\n" &
+
 
 collectEOF
 
@@ -114,7 +125,7 @@ printf  "File '$collect_script' created.\n"
 
 init_stock(){
     # Create Log directory
-    mkdir -pv $LOG_LOCATION/$STOCKNAME
+    mkdir -pv ${LOG_LOCATION}${STOCKNAME}
 
     # Count number of rows in input file.
     module load Python
