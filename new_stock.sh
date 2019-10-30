@@ -42,6 +42,7 @@ stock_suffix="${1}"
 stock_name="${STOCKNAME}"
 time="04:00:00"
 mem="5000"
+partition="large"   #"long"
 rows="${INPUT_ROWS}" # out of ${INPUT_ROWS}
 mail_user="none"
 profiling="false"
@@ -83,6 +84,7 @@ sbatch -t \${time} \
 -a \${input_array} \
 -J \${stock_name}_\${stock_suffix} \
 -o \${root_log_dir}\${stock_name}%a.log \
+-p \${partition}\
 --mem \${mem} \
 --mail-type TIME_LIMIT_80,ARRAY_TASKS \
 --mail-user \${mail_user} \
