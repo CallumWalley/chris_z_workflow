@@ -11,7 +11,8 @@ git clone https://github.com/CallumWalley/chris_z_workflow.git
 
 ```
 LOG_LOCATION="/nesi/nobackup/aut02787/"
-SCRIPT_LOCATION="/nesi/project/aut02787/scripts/chris_z_workflow"
+WORKING_LOCATION="/nesi/project/aut02787/"
+SCRIPT_LOCATION="/nesi/project/aut02787/scripts/"   #e.g. this repo.
 ```
 
 Job stages defined at top of ``new_stock.sh`` under ``stage_definition()``
@@ -32,14 +33,7 @@ But you may want to change this.
 
 ## File Tree ##
 ```
-root/
-│
-├── new_stock.sh
-├── scripts/
-│   ├── merge.m
-│   ├── AutomateRun.m
-│   ├── AskSideVariables.m
-│   └── ...
+$WORKING_LOCATION/
 ├── ACR/
 │   ├── AutomateRun/
 │   │   ├── AutomateRun_submit.sh
@@ -60,7 +54,16 @@ root/
 │       └── ...
 └── ...
 ```
-
+and
+```
+├── new_stock.sh
+├── scripts/
+│   ├── new_stock.sh
+│   ├── merge.m
+│   ├── AutomateRun.m
+│   ├── AskSideVariables.m
+│   └── ...
+```
 ## How To ##
 
 1. Run ``new_stock.sh``
