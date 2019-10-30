@@ -84,7 +84,7 @@ sbatch -t \${time} \
 -a \${input_array} \
 -J \${stock_name}_\${stock_suffix} \
 -o \${root_log_dir}\${stock_name}%a.log \
--p \${partition}\
+-p \${partition} \
 --mem \${mem} \
 --mail-type TIME_LIMIT_80,ARRAY_TASKS \
 --mail-user \${mail_user} \
