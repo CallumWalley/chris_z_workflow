@@ -5,6 +5,7 @@
 #=======================#
 
 LOG_LOCATION="/nesi/nobackup/nesi99999/"
+WORKING_LOCATION="/nesi/project/nesi99999/Callum/chris_z/new_workflow/chris_z_workflow/"
 SCRIPT_LOCATION="/nesi/project/nesi99999/Callum/chris_z/new_workflow/chris_z_workflow/scripts"
 
 #=======================#
@@ -23,14 +24,14 @@ stage_definition(){
 
 stage(){
 
-    mkdir -pv "$PWD/$STOCKNAME/${1}"
+    mkdir -pv "${WORKING_LOCATION}/${STOCKNAME}/${1}"
     
-    submit_script="$PWD/$STOCKNAME/${1}/${1}_submit.sh"
-    validate_script="$PWD/$STOCKNAME/${1}/${1}_validate.sh"
-    collect_script="$PWD/$STOCKNAME/${1}/${1}_collect.sh"
+    submit_script="${WORKING_LOCATION}/${STOCKNAME}/${1}/${1}_submit.sh"
+    validate_script="${WORKING_LOCATION}/${STOCKNAME}/${1}/${1}_validate.sh"
+    collect_script="${WORKING_LOCATION}/${STOCKNAME}/${1}/${1}_collect.sh"
 
 
-    root_output_dir="${PWD}/${STOCKNAME}/${1}/mat_files/"  
+    root_output_dir="${WORKING_LOCATION}/${STOCKNAME}/${1}/mat_files/"  
 
     cat <<submitEOF > ${submit_script}
 
